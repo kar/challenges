@@ -10,6 +10,7 @@ import gs.kar.justeatrecruitmenttest.action.FetchLocationAction;
 import gs.kar.justeatrecruitmenttest.action.FetchRestaurantsAction;
 import gs.kar.justeatrecruitmenttest.android.action.DialogFetchLocationAction;
 import gs.kar.justeatrecruitmenttest.android.action.ToastDisplayErrorAction;
+import gs.kar.justeatrecruitmenttest.android.action.justeat.JustEatApiFetchRestaurantsAction;
 import gs.kar.justeatrecruitmenttest.model.Location;
 import gs.kar.justeatrecruitmenttest.model.Restaurant;
 import gs.kar.justeatrecruitmenttest.userstory.ViewListOfRestaurants;
@@ -21,7 +22,8 @@ import gs.kar.justeatrecruitmenttest.userstory.ViewListOfRestaurants;
  */
 public class SimpleModule implements Module {
 	@Override public ViewListOfRestaurants inject(Context context) {
-		return fetchLocationWithDialog(context);
+		// return fetchLocationWithDialog(context);
+		return fetchFromApi(context);
 	}
 
 	/**
@@ -39,6 +41,26 @@ public class SimpleModule implements Module {
 		DisplayRestaurantsAction dResA = new DisplayRestaurantsAction() {
 			@Override public void perform(List<Restaurant> input, Result<Void> result) {
 				result.fail("we shouldn't get this far");
+			}
+		};
+
+		DisplayErrorAction dErrA = new ToastDisplayErrorAction(context);
+
+		return new ViewListOfRestaurants(fLocA, fResA, dResA, dErrA);
+	}
+
+	/**
+	 * fetchFromAPi will fetch location by asking user for the postcode using AlertDialog, and then use the postcode to
+	 * call Just Eat API.
+	 */
+	private ViewListOfRestaurants fetchFromApi(Context context) {
+		FetchLocationAction fLocA = new DialogFetchLocationAction(context);
+
+		FetchRestaurantsAction fResA = new JustEatApiFetchRestaurantsAction();
+
+		DisplayRestaurantsAction dResA = new DisplayRestaurantsAction() {
+			@Override public void perform(List<Restaurant> input, Result<Void> result) {
+				result.fail("Got restaurants. Displaying not implemented.");
 			}
 		};
 
