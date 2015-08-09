@@ -40,7 +40,7 @@ public class Restaurant {
 		return String.format("%s (%.2f) [%s]", name, rating, makeCuisinesString());
 	}
 
-	private String makeCuisinesString() {
+	public String makeCuisinesString() {
 		StringBuilder sb = new StringBuilder(typesOfFood[0].getName());
 		for (int i = 1; i < typesOfFood.length; i++) {
 			sb.append(String.format(", %s", typesOfFood[i].getName()));

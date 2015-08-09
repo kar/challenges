@@ -13,6 +13,7 @@ import gs.kar.justeatrecruitmenttest.action.FetchLocationAction;
 import gs.kar.justeatrecruitmenttest.action.FetchRestaurantsAction;
 import gs.kar.justeatrecruitmenttest.android.action.DialogFetchLocationAction;
 import gs.kar.justeatrecruitmenttest.android.action.HardcodedFetchLocationAction;
+import gs.kar.justeatrecruitmenttest.android.action.PrettyDisplayRestaurantsAction;
 import gs.kar.justeatrecruitmenttest.android.action.SimpleDisplayRestaurantsAction;
 import gs.kar.justeatrecruitmenttest.android.action.ToastDisplayErrorAction;
 import gs.kar.justeatrecruitmenttest.android.action.justeat.JustEatApiFetchRestaurantsAction;
@@ -29,7 +30,8 @@ public class SimpleModule implements Module {
 	@Override public ViewListOfRestaurants inject(Activity context) {
 		// return fetchLocationWithDialog(context);
 		// return fetchFromApi(context);
-		return displaySimple(context);
+		// return displaySimple(context);
+		return displayPretty(context);
 	}
 
 	/**
@@ -85,6 +87,22 @@ public class SimpleModule implements Module {
 
 		ListView listView = (ListView) context.findViewById(R.id.main_list);
 		DisplayRestaurantsAction dResA = new SimpleDisplayRestaurantsAction(listView);
+
+		DisplayErrorAction dErrA = new ToastDisplayErrorAction(context);
+
+		return new ViewListOfRestaurants(fLocA, fResA, dResA, dErrA);
+	}
+
+	/**
+	 * displayPretty will fetch hardcoded location, call Just Eat API and display the results with pretty UI.
+	 */
+	private ViewListOfRestaurants displayPretty(Activity context) {
+		FetchLocationAction fLocA = new HardcodedFetchLocationAction("SE19");
+
+		FetchRestaurantsAction fResA = new JustEatApiFetchRestaurantsAction();
+
+		ListView listView = (ListView) context.findViewById(R.id.main_list);
+		DisplayRestaurantsAction dResA = new PrettyDisplayRestaurantsAction(listView);
 
 		DisplayErrorAction dErrA = new ToastDisplayErrorAction(context);
 

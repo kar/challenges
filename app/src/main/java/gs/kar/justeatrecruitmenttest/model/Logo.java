@@ -14,4 +14,8 @@ public class Logo {
 	public Logo(URL url) {
 		this.url = url;
 	}
+
+	public String getUrlPath() {
+		return url.toExternalForm();
+	}
 }
