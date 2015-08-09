@@ -1,14 +1,19 @@
 package gs.kar.justeatrecruitmenttest.android.di;
 
+import android.app.Activity;
 import android.content.Context;
+import android.widget.ListView;
 
 import java.util.List;
 
+import gs.kar.justeatrecruitmenttest.R;
 import gs.kar.justeatrecruitmenttest.action.DisplayErrorAction;
 import gs.kar.justeatrecruitmenttest.action.DisplayRestaurantsAction;
 import gs.kar.justeatrecruitmenttest.action.FetchLocationAction;
 import gs.kar.justeatrecruitmenttest.action.FetchRestaurantsAction;
 import gs.kar.justeatrecruitmenttest.android.action.DialogFetchLocationAction;
+import gs.kar.justeatrecruitmenttest.android.action.HardcodedFetchLocationAction;
+import gs.kar.justeatrecruitmenttest.android.action.SimpleDisplayRestaurantsAction;
 import gs.kar.justeatrecruitmenttest.android.action.ToastDisplayErrorAction;
 import gs.kar.justeatrecruitmenttest.android.action.justeat.JustEatApiFetchRestaurantsAction;
 import gs.kar.justeatrecruitmenttest.model.Location;
@@ -21,9 +26,10 @@ import gs.kar.justeatrecruitmenttest.userstory.ViewListOfRestaurants;
  * This is used for step-by-step implementation of mocked parts (iterative approach).
  */
 public class SimpleModule implements Module {
-	@Override public ViewListOfRestaurants inject(Context context) {
+	@Override public ViewListOfRestaurants inject(Activity context) {
 		// return fetchLocationWithDialog(context);
-		return fetchFromApi(context);
+		// return fetchFromApi(context);
+		return displaySimple(context);
 	}
 
 	/**
@@ -69,4 +75,19 @@ public class SimpleModule implements Module {
 		return new ViewListOfRestaurants(fLocA, fResA, dResA, dErrA);
 	}
 
+	/**
+	 * displaySimple will fetch hardcoded location, call Just Eat API and display the results with simple UI.
+	 */
+	private ViewListOfRestaurants displaySimple(Activity context) {
+		FetchLocationAction fLocA = new HardcodedFetchLocationAction("SE19");
+
+		FetchRestaurantsAction fResA = new JustEatApiFetchRestaurantsAction();
+
+		ListView listView = (ListView) context.findViewById(R.id.main_list);
+		DisplayRestaurantsAction dResA = new SimpleDisplayRestaurantsAction(listView);
+
+		DisplayErrorAction dErrA = new ToastDisplayErrorAction(context);
+
+		return new ViewListOfRestaurants(fLocA, fResA, dResA, dErrA);
+	}
 }

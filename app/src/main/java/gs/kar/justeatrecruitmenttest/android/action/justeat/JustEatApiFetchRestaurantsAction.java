@@ -88,7 +88,7 @@ public class JustEatApiFetchRestaurantsAction implements FetchRestaurantsAction 
 			return null;
 		}
 
-		return new Restaurant(r.Id, r.Name, logo, rating, typesOfFood);
+		return new Restaurant(r.Id, r.Name.trim(), logo, rating, typesOfFood);
 	}
 
 	private @Nullable Logo convertLogo(@Nullable JsonLogo[] l) {
@@ -135,6 +135,6 @@ public class JustEatApiFetchRestaurantsAction implements FetchRestaurantsAction 
 	}
 
 	private @Nullable Cuisine convertCuisine(JsonCuisine c) {
-		return new Cuisine(c.Id, c.Name);
+		return new Cuisine(c.Id, c.Name.trim());
 	}
 }

@@ -1,5 +1,6 @@
 package gs.kar.justeatrecruitmenttest.android.di;
 
+import android.app.Activity;
 import android.content.Context;
 
 import java.util.LinkedList;
@@ -22,7 +23,7 @@ import gs.kar.justeatrecruitmenttest.userstory.ViewListOfRestaurants;
  * into unit tests, without having to run anything on actual device.
  */
 public class MockedModule implements Module {
-	@Override public ViewListOfRestaurants inject(Context context) {
+	@Override public ViewListOfRestaurants inject(Activity context) {
 		// return failOnFetchingLocation(context);
 		// return failOnFetchingRestaurants(context);
 		return failOnDisplayingRestaurants(context);

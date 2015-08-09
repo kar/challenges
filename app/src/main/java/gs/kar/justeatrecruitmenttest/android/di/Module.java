@@ -1,6 +1,6 @@
 package gs.kar.justeatrecruitmenttest.android.di;
 
-import android.content.Context;
+import android.app.Activity;
 
 import gs.kar.justeatrecruitmenttest.userstory.ViewListOfRestaurants;
 
@@ -11,5 +11,5 @@ import gs.kar.justeatrecruitmenttest.userstory.ViewListOfRestaurants;
  * automated testing.
  */
 public interface Module {
-	ViewListOfRestaurants inject(Context context);
+	ViewListOfRestaurants inject(Activity context);
 }
