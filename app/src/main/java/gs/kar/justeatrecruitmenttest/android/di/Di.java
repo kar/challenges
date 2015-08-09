@@ -5,6 +5,7 @@ package gs.kar.justeatrecruitmenttest.android.di;
  */
 public class Di {
 	public static Module getModule() {
-		return new MockedModule();
+		// return new MockedModule();
+		return new SimpleModule();
 	}
 }
