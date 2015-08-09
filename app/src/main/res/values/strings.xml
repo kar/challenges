@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Just Eat Recruitment Test</string>
     <string name="title_activity_maps">Pick your location</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 </resources>
