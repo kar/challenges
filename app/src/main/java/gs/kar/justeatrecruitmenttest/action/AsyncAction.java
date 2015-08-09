@@ -10,7 +10,6 @@ public interface AsyncAction<T, U> {
 	interface Result<U> {
 		void on(U result);
 		void fail(String reason);
-		void cancel();
 	}
 
 	void perform(@Nullable T input, @Nullable Result<U> result);

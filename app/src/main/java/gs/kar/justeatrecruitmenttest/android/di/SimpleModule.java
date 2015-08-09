@@ -42,7 +42,7 @@ public class SimpleModule implements Module {
 
 		FetchRestaurantsAction fResA = new FetchRestaurantsAction() {
 			@Override public void perform(Location input, Result<List<Restaurant>> result) {
-				result.fail(String.format("Got location: %s. Fetching restaurants not implemented.", input.getPostCode()));
+				result.fail(String.format("Got location: %s. Fetching restaurants not implemented.", input.getPostcode()));
 			}
 		};
 

@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 		/**
 		 * The user story configuration would be injected by DI in actual solution.
 		 */
-		userStory = Di.getModule().inject(this);
+		userStory = Di.getDefault().inject(this);
 		userStory.perform();
 	}
 
@@ -38,11 +38,15 @@ public class MainActivity extends AppCompatActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 
-		if (id == R.id.action_settings) {
-			userStory.perform();
-			return true;
+		if (id == R.id.action_default) {
+			userStory = Di.getDefault().inject(this);
+		} else if (id == R.id.action_dialog) {
+			userStory = Di.getForDialogLocation().inject(this);
+		} else if (id == R.id.action_map) {
+			userStory = Di.getForMapLocation().inject(this);
 		}
 
-		return super.onOptionsItemSelected(item);
+		userStory.perform();
+		return true;
 	}
 }

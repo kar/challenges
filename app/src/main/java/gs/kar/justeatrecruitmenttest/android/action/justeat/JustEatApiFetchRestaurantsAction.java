@@ -35,7 +35,7 @@ public class JustEatApiFetchRestaurantsAction implements FetchRestaurantsAction 
 		}
 
 		try {
-			justEat.getRestaurants(location.getPostCode(), new Callback<JsonGetRestaurants>() {
+			justEat.getRestaurants(location.getPostcode(), new Callback<JsonGetRestaurants>() {
 				@Override public void success(JsonGetRestaurants restaurants, Response response) {
 					result.on(convert(restaurants));
 				}

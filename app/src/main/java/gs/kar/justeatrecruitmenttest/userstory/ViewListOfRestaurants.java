@@ -48,9 +48,6 @@ public class ViewListOfRestaurants implements UserStory {
 			displayErrorAction.perform(reason, null); // This action never fails.
 		}
 
-		@Override public void cancel() {
-
-		}
 	};
 
 	private final AsyncAction.Result<List<Restaurant>> actOnFetchRestaurants = new AsyncAction.Result<List<Restaurant>>() {
@@ -62,9 +59,6 @@ public class ViewListOfRestaurants implements UserStory {
 			displayErrorAction.perform(reason, null); // This action never fails.
 		}
 
-		@Override public void cancel() {
-
-		}
 	};
 
 	private final AsyncAction.Result<Void> actOnDisplayRestaurants = new AsyncAction.Result<Void>() {
@@ -76,8 +70,5 @@ public class ViewListOfRestaurants implements UserStory {
 			displayErrorAction.perform(reason, null); // This action never fails.
 		}
 
-		@Override public void cancel() {
-
-		}
 	};
 }

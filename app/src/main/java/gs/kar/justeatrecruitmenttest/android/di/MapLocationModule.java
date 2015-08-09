@@ -8,25 +8,22 @@ import gs.kar.justeatrecruitmenttest.action.DisplayErrorAction;
 import gs.kar.justeatrecruitmenttest.action.DisplayRestaurantsAction;
 import gs.kar.justeatrecruitmenttest.action.FetchLocationAction;
 import gs.kar.justeatrecruitmenttest.action.FetchRestaurantsAction;
-import gs.kar.justeatrecruitmenttest.android.action.DialogFetchLocationAction;
 import gs.kar.justeatrecruitmenttest.android.action.PrettyDisplayRestaurantsAction;
 import gs.kar.justeatrecruitmenttest.android.action.ToastDisplayErrorAction;
 import gs.kar.justeatrecruitmenttest.android.action.justeat.JustEatApiFetchRestaurantsAction;
+import gs.kar.justeatrecruitmenttest.android.action.mapfetchlocation.MapFetchLocationAction;
 import gs.kar.justeatrecruitmenttest.userstory.ViewListOfRestaurants;
 
 /**
- * ProductionModule is a DI module which assembles user story together with the production implementation of it.
+ * MapLocationModule is a DI module which assembles user story together with location being fetched using map.
  */
-public class ProductionModule implements Module {
-	@Override public ViewListOfRestaurants inject(Activity context) {
-		return displayPretty(context);
-	}
+public class MapLocationModule implements Module {
 
 	/**
-	 * displayPretty will fetch location by asking user, call Just Eat API and display the results with pretty UI.
+	 * inject will fetch location from map, call Just Eat API and display the results with pretty UI.
 	 */
-	private ViewListOfRestaurants displayPretty(Activity context) {
-		FetchLocationAction fLocA = new DialogFetchLocationAction(context);
+	@Override public ViewListOfRestaurants inject(Activity context) {
+		FetchLocationAction fLocA = new MapFetchLocationAction(context);
 
 		FetchRestaurantsAction fResA = new JustEatApiFetchRestaurantsAction();
 

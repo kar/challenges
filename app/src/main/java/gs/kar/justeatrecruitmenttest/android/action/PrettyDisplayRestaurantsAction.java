@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import gs.kar.justeatrecruitmenttest.R;
@@ -29,7 +30,11 @@ public class PrettyDisplayRestaurantsAction implements DisplayRestaurantsAction 
 	}
 
 	@Override public void perform(@Nullable List<Restaurant> restaurants, @Nullable Result<Void> result) {
-		populateListView(listView, restaurants);
+		if (restaurants.isEmpty()) {
+			populateEmptyView(listView);
+		} else {
+			populateListView(listView, restaurants);
+		}
 	}
 
 	private void populateListView(ListView listView, List<Restaurant> restaurants) {
@@ -37,10 +42,14 @@ public class PrettyDisplayRestaurantsAction implements DisplayRestaurantsAction 
 		listView.setAdapter(adapter);
 	}
 
+	private void populateEmptyView(ListView listView) {
+		ArrayAdapter<Restaurant> adapter = new EmptyAdapter(listView.getContext());
+		listView.setAdapter(adapter);
+	}
+
 	private static class PrettyDisplayAdapter extends ArrayAdapter<Restaurant> {
 
 		private static final int itemLayout = R.layout.item_restaurant;
-		private static final int drawableNoLogo = android.R.drawable.ic_dialog_info;
 
 		public PrettyDisplayAdapter(Context context, List<Restaurant> restaurants) {
 			super(context, itemLayout, restaurants);
@@ -65,5 +74,25 @@ public class PrettyDisplayRestaurantsAction implements DisplayRestaurantsAction 
 		private TextView getItem(View view, int id) {
 			return (TextView) view.findViewById(id);
 		}
+	}
+
+	/**
+	 * EmptyAdapter displays the "no results" view. It's a bit of a hack.
+	 */
+	private static class EmptyAdapter extends ArrayAdapter<Restaurant> {
+
+		private static final int itemLayout = R.layout.item_empty;
+
+		public EmptyAdapter(Context context) {
+			super(context, itemLayout, new Restaurant[]{null});
+		}
+
+		@Override public View getView(int position, @Nullable View convertView, ViewGroup parent) {
+			if (convertView == null) {
+				convertView = LayoutInflater.from(getContext()).inflate(itemLayout, null);
+			}
+			return convertView;
+		}
+
 	}
 }

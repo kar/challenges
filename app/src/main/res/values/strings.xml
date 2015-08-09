@@ -3,5 +3,7 @@
     <string name="title_activity_maps">Pick your location</string>
     <string name="title_activity_main">Just Eat Restaurants</string>
 
-    <string name="action_settings">Change location</string>
+    <string name="action_default">Fetch for SE19</string>
+    <string name="action_dialog">Input location...</string>
+    <string name="action_map">Fetch for current location...</string>
 </resources>

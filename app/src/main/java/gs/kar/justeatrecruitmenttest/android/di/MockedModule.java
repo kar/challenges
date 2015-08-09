@@ -21,6 +21,8 @@ import gs.kar.justeatrecruitmenttest.userstory.ViewListOfRestaurants;
  * This could easily be a basis for automated unit tests, however right now it's really useful for development itself.
  * We could go a step further and create a mocked module which has no Android dependencies, and easily incorporate it
  * into unit tests, without having to run anything on actual device.
+ *
+ * In fact, that's what I did later on in ViewListOfRestaurantsTest.
  */
 public class MockedModule implements Module {
 	@Override public ViewListOfRestaurants inject(Activity context) {
