@@ -5,12 +5,12 @@ import org.junit.Test
 
 import org.junit.Assert.*
 
-class ExampleUnitTest {
+class AbihomeTest {
     @Test
     fun app_willDownloadOnStart() = runBlocking {
         var downloadCalled = false
 
-        val app = AbiApp(download = {
+        val app = AbihomeApp(download = {
             downloadCalled = true
             emptyList()
         })
@@ -23,7 +23,7 @@ class ExampleUnitTest {
     fun app_willBroadcastImages() = runBlocking {
         val images = listOf(Image("example.png"))
 
-        val app = AbiApp(download = { images })
+        val app = AbihomeApp(download = { images })
         val state = app.state.subscribe()
         assertEquals(images, state.receive().images)
     }
@@ -33,19 +33,19 @@ class ExampleUnitTest {
         val images = listOf(Image("example.png"), Image("example2.png"))
         val (img1, img2) = images
 
-        val app = AbiApp(download = { images })
+        val app = AbihomeApp(download = { images })
         val state = app.state.subscribe()
         state.receive()
 
         app.update.send(OnSelectionChange(img1))
         var abi = state.receive()
-        assertEquals(img1, abi.selectedImage)
-        assertEquals(null, abi.previousImage)
+        assertEquals(img1, abi.tappedImages[0])
+        assertEquals(null, abi.tappedImages.getOrNull(1))
 
         app.update.send(OnSelectionChange(img2))
         abi = state.receive()
-        assertEquals(img2, abi.selectedImage)
-        assertEquals(img1, abi.previousImage)
+        assertEquals(img2, abi.tappedImages[0])
+        assertEquals(img1, abi.tappedImages[1])
     }
 
 }
