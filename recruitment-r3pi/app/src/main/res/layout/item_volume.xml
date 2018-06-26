@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="item"
+            type="gs.kar.r3pi.Volume" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/thumbnail"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:contentDescription="@{item.id}" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@id/thumbnail"
+            android:padding="4dp"
+            android:text="@{item.volumeInfo.title}"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_toEndOf="@id/thumbnail"
+            android:padding="4dp"
+            android:text="@{item.volumeInfo.allAuthors()}" />
+
+    </RelativeLayout>
+
+</layout>
