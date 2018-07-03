@@ -1,17 +1,26 @@
 package gs.kar.rfandom
 
+import android.databinding.ObservableArrayList
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.View
+import com.github.nitrico.lastadapter.LastAdapter
+import com.github.nitrico.lastadapter.Type
+import gs.kar.rfandom.databinding.ItemTitleBinding
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.channels.consumeEach
+import kotlinx.coroutines.experimental.launch
+import org.kodein.di.generic.instance
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,10 +53,59 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    class WikisFragment : Fragment() {
+
+        private val state: State<FandomState> by DI.instance()
+        private val update: Update<Message, FandomState> by DI.instance()
+
+        override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                                  savedInstanceState: Bundle?): View? {
+            val view = inflater.inflate(R.layout.fragment_wikis, container, false) as RecyclerView
+            view.layoutManager = LinearLayoutManager(context)
+            return view
+        }
+
+        override fun onStart() {
+            super.onStart()
+            bind(view as RecyclerView)
+        }
+
+        private fun bind(view: RecyclerView) {
+            val titleType = Type<ItemTitleBinding>(R.layout.item_title)
+
+            launch {
+                val observable = ObservableArrayList<Wiki>()
+                launch(UI) {
+                    LastAdapter(observable, BR.item).map<Wiki>(titleType).into(view)
+                }
+                val channel = state.subscribe()
+                channel.consumeEach { fandom ->
+                    val lastIndex = observable.size - 1
+                    if (lastIndex < 0) launch(UI) { observable.addAll(fandom.wikis) }
+                    else with (fandom.wikis) {
+                        val last = observable.get(lastIndex)
+                        val newIndex = indexOf(last) + 1
+                        if (newIndex < size) launch(UI) { observable.addAll(subList(newIndex, size)) }
+                    }
+                }
+            }
+
+            view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (!view.canScrollVertically(1)) {
+                        update.send(OnNextPage())
+                    }
+                }
+            })
+        }
+
+    }
+
     class ImagesFragment : Fragment() {
 
-//        private val update: Update<Message, AbihomeState> by DI.instance()
-//        private val state: State<AbihomeState> by DI.instance()
+        private val state: State<FandomState> by DI.instance()
+        private val update: Update<Message, FandomState> by DI.instance()
 
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                                   savedInstanceState: Bundle?): View? {
@@ -84,43 +142,4 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    class WikisFragment : Fragment() {
-
-//        private val update: Update<Message, AbihomeState> by DI.instance()
-//        private val state: State<AbihomeState> by DI.instance()
-
-        override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                                  savedInstanceState: Bundle?): View? {
-            val view = inflater.inflate(R.layout.fragment_wikis, container, false) as RecyclerView
-            view.layoutManager = GridLayoutManager(context, 2)
-            return view
-        }
-
-        override fun onStart() {
-            super.onStart()
-            bind(view as RecyclerView)
-        }
-
-        private fun bind(view: RecyclerView) {
-//            val imageType = Type<ItemImageBinding>(R.layout.item_image)
-//                    .onBind {
-//                        val url = it.binding.item?.url
-//                        if (url != null) Glide.with(view).load(url).into(it.itemView as ImageView)
-//                    }
-//                    .onClick {
-//                        val image = it.binding.item
-//                        if (image != null) update.send(OnSelectionChange(image))
-//                    }
-//
-//            launch {
-//                val channel = state.subscribe()
-//                val abi = channel.receive()
-//                launch(UI) {
-//                    LastAdapter(abi.images, BR.item).map<Image>(imageType).into(view)
-//                }
-//                channel.cancel()
-//            }
-        }
-
-    }
 }
