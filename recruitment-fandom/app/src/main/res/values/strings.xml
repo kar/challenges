@@ -90,4 +90,6 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="action_settings">Settings</string>
+    <string name="articles_count_thousands">Articles: %dk</string>
+    <string name="articles_count">Articles: %d</string>
 </resources>

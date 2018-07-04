@@ -1,5 +1,6 @@
 package gs.kar.rfandom
 
+import android.content.Context
 import com.github.kittinunf.fuel.core.ResponseDeserializable
 import com.github.kittinunf.fuel.httpGet
 import com.google.gson.Gson
@@ -8,15 +9,15 @@ import org.kodein.di.generic.bind
 import org.kodein.di.generic.singleton
 
 /**
- * R3pi.kt provides models and business logic specific to this app.
+ * Fandom.kt provides models and business logic specific to this app.
  *
  * Overview:
- * - Volume*, R3piState: The models,
+ * - Wiki*, FandomState: The models,
  * - Message: The concrete messages emitted in the app,
- * - R3piApp: The business logic,
+ * - FandomApp: The business logic,
  * - DI: A Dependency Injection module.
  *
- * The R3piApp class exposes several parameters while providing their default implementations,
+ * The FandomApp class exposes several parameters while providing their default implementations,
  * which makes the business logic easily testable without the need for using a mocking framework.
  */
 
@@ -36,8 +37,11 @@ data class Wiki(
 data class WikiStats(
         val articles: Int
 ) {
-    fun articlesString(): String {
-        return "Articles: ${articles / 1000}k"
+    fun articlesString(context: Context): String {
+        return if (articles < 1000)
+            context.getString(R.string.articles_count, articles)
+        else
+            context.getString(R.string.articles_count_thousands, articles / 1000)
     }
 }
 
@@ -76,10 +80,10 @@ class FandomApp(
                 state.copy(wikis = wikis)
             }
             is OnNextPage -> {
-                val startIndex = (state.page + 1) * perPage
-                val url = apiUrl.format(perPage, startIndex)
+                val batch = state.page + 1
+                val url = apiUrl.format(perPage, batch)
                 val wikis = download(url)
-                state.copy(wikis = state.wikis + wikis, page = state.page + 1)
+                state.copy(wikis = state.wikis + wikis, page = batch)
             }
         }
     }

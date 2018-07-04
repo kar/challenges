@@ -12,8 +12,11 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.View
+import android.widget.ImageView
+import com.bumptech.glide.Glide
 import com.github.nitrico.lastadapter.LastAdapter
 import com.github.nitrico.lastadapter.Type
+import gs.kar.rfandom.databinding.ItemImageBinding
 import gs.kar.rfandom.databinding.ItemTitleBinding
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -80,13 +83,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 val channel = state.subscribe()
                 channel.consumeEach { fandom ->
-                    val lastIndex = observable.size - 1
-                    if (lastIndex < 0) launch(UI) { observable.addAll(fandom.wikis) }
-                    else with (fandom.wikis) {
-                        val last = observable.get(lastIndex)
-                        val newIndex = indexOf(last) + 1
-                        if (newIndex < size) launch(UI) { observable.addAll(subList(newIndex, size)) }
-                    }
+                    launch(UI) { observable.appendFrom(fandom.wikis) }
                 }
             }
 
@@ -120,26 +117,33 @@ class MainActivity : AppCompatActivity() {
         }
 
         private fun bind(view: RecyclerView) {
-//            val imageType = Type<ItemImageBinding>(R.layout.item_image)
-//                    .onBind {
-//                        val url = it.binding.item?.url
-//                        if (url != null) Glide.with(view).load(url).into(it.itemView as ImageView)
-//                    }
-//                    .onClick {
-//                        val image = it.binding.item
-//                        if (image != null) update.send(OnSelectionChange(image))
-//                    }
-//
-//            launch {
-//                val channel = state.subscribe()
-//                val abi = channel.receive()
-//                launch(UI) {
-//                    LastAdapter(abi.images, BR.item).map<Image>(imageType).into(view)
-//                }
-//                channel.cancel()
-//            }
+            val imageType = Type<ItemImageBinding>(R.layout.item_image)
+                    .onBind {
+                        val url = it.binding.item?.image
+                        if (url != null) Glide.with(view).load(url).into(it.binding.thumbnail)
+                    }
+
+            launch {
+                val observable = ObservableArrayList<Wiki>()
+                launch(UI) {
+                    LastAdapter(observable, BR.item).map<Wiki>(imageType).into(view)
+                }
+                val channel = state.subscribe()
+                channel.consumeEach { fandom ->
+                    launch(UI) { observable.appendFrom(fandom.wikis) }
+                }
+            }
+
+            view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (!view.canScrollVertically(1)) {
+                        update.send(OnNextPage())
+                    }
+                }
+            })
         }
 
     }
-
 }
+
