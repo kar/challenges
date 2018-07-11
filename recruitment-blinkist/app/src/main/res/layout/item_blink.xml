@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="item"
+            type="gs.kar.rblinkist.Blink" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/thumbnail"
+            android:layout_width="80dp"
+            android:layout_height="104dp"
+            android:contentDescription="@{item.id}"
+            android:padding="4dp" />
+
+        <TextView
+            android:id="@+id/author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/thumbnail"
+            android:gravity="start"
+            android:padding="4dp"
+            android:text="@{item.volumeInfo.allAuthors()}" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/author"
+            android:layout_toEndOf="@id/thumbnail"
+            android:gravity="start"
+            android:padding="4dp"
+            android:text="@{item.volumeInfo.title}"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+
+    </RelativeLayout>
+
+</layout>
